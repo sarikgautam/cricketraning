@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Cricket Academy - Professional Cricket Training | Coach Rajesh Kumar</title>
+    <meta name="description" content="Professional cricket training with Coach Rajesh Kumar. Expert coaching for batting, bowling, fielding. Individual & group sessions available. Book your training today!">
+    <meta name="keywords" content="cricket training, cricket coach, batting coaching, bowling coaching, cricket academy, professional cricket trainer">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%231e3a8a" width="1200" height="600"/><circle fill="%23ffffff" opacity="0.1" cx="200" cy="150" r="80"/><circle fill="%23ffffff" opacity="0.1" cx="800" cy="300" r="120"/><circle fill="%23ffffff" opacity="0.1" cx="1000" cy="100" r="60"/><rect fill="%23ffffff" opacity="0.05" x="0" y="550" width="1200" height="50"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        .cricket-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+        .testimonial-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .price-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .gallery-item {
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: bold;
+            color: #6b7280;
+            position: relative;
+        }
+        .step.active {
+            background-color: #1e3a8a;
+            color: white;
+        }
+        .step.completed {
+            background-color: #10b981;
+            color: white;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 20px;
+            height: 2px;
+            background-color: #e5e7eb;
+            transform: translateY(-50%);
+        }
+        .step.completed:not(:last-child)::after {
+            background-color: #10b981;
+        }
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #1e3a8a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .checkbox-item:hover {
+            border-color: #1e3a8a;
+            background-color: #f8fafc;
+        }
+        .checkbox-item.selected {
+            border-color: #1e3a8a;
+            background-color: #dbeafe;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-blue-800">
+                        <i class="fas fa-cricket-ball mr-2"></i>Elite Cricket Academy
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#about" class="nav-link text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">About</a>
+                        <a href="#tips" class="nav-link text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Cricket Tips</a>
+                        <a href="#programs" class="nav-link text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Programs</a>
+                        <a href="#gallery" class="nav-link text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Gallery</a>
+                        <a href="#testimonials" class="nav-link text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Reviews</a>
+                        <a href="#contact" class="nav-link text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                        <button onclick="openRegistrationModal()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium">Book Session</button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-green-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="nav-link block text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="#about" class="nav-link block text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#tips" class="nav-link block text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-base font-medium">Cricket Tips</a>
+                <a href="#programs" class="nav-link block text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-base font-medium">Programs</a>
+                <a href="#gallery" class="nav-link block text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-base font-medium">Gallery</a>
+                <a href="#testimonials" class="nav-link block text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-base font-medium">Reviews</a>
+                <a href="#contact" class="nav-link block text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                <button onclick="openRegistrationModal()" class="w-full text-left bg-blue-700 hover:bg-blue-800 text-white px-3 py-2 rounded-md text-base font-medium">Book Session</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Master Cricket with Elite Training</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Professional cricket coaching by Coach Rajesh Kumar. Transform your game with expert techniques, personalized training, and proven results.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="openRegistrationModal()" class="bg-blue-700 hover:bg-blue-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>Book Your Session
+                </button>
+                <a href="#programs" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition duration-300">
+                    View Programs
+                </a>
+            </div>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="text-3xl font-bold">500+</div>
+                    <div class="text-lg">Students Trained</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold">15+</div>
+                    <div class="text-lg">Years Experience</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold">95%</div>
+                    <div class="text-lg">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Meet Your Coach</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Learn from a certified professional with years of experience in developing cricket talent</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg p-8 h-96 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-32 h-32 bg-blue-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                <i class="fas fa-user text-white text-4xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-blue-800">Coach Rajesh Kumar</h3>
+                            <p class="text-blue-700">Professional Cricket Trainer</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-bold text-gray-900 mb-6">Rajesh Kumar</h3>
+                    <p class="text-lg text-gray-600 mb-6">With over 15 years of professional cricket training experience, Coach Rajesh has developed hundreds of players from beginners to state-level competitors. His expertise spans all aspects of the game, from fundamental techniques to advanced strategies.</p>
+                    
+                    <div class="mb-8">
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4">Achievements & Certifications</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-trophy text-blue-700 mr-3"></i>
+                                Level 3 Cricket Coaching Certification
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-trophy text-blue-700 mr-3"></i>
+                                Former State-Level Player (5 years)
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-trophy text-blue-700 mr-3"></i>
+                                50+ Students Selected for District Teams
+                            </li>
+                            <li class="flex items-center text-gray-600">
+                                <i class="fas fa-trophy text-blue-700 mr-3"></i>
+                                Sports Psychology Certification
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Training Philosophy</h4>
+                        <p class="text-gray-600">"Every player has unique potential. My approach combines technical excellence with mental strength, ensuring each student develops both skill and confidence on the field."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cricket Tips Section -->
+    <section id="tips" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Expert Cricket Tips</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Master the fundamentals with professional guidance</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Batting Tips -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-blue-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-baseball-bat text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Batting</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• Perfect your stance and grip</li>
+                        <li>• Master timing and footwork</li>
+                        <li>• Develop shot selection skills</li>
+                        <li>• Build concentration techniques</li>
+                        <li>• Practice different formats</li>
+                    </ul>
+                </div>
+
+                <!-- Bowling Tips -->
+                <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-red-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-cricket-ball text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Bowling</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• Perfect your bowling action</li>
+                        <li>• Master line and length</li>
+                        <li>• Develop swing and spin</li>
+                        <li>• Learn strategic variations</li>
+                        <li>• Build bowling stamina</li>
+                    </ul>
+                </div>
+
+                <!-- Fielding Tips -->
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-indigo-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-running text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Fielding</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• Improve catching techniques</li>
+                        <li>• Master ground fielding</li>
+                        <li>• Develop throwing accuracy</li>
+                        <li>• Enhance reaction time</li>
+                        <li>• Learn positioning skills</li>
+                    </ul>
+                </div>
+
+                <!-- Fitness Tips -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-purple-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-dumbbell text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Fitness</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• Build cricket-specific strength</li>
+                        <li>• Improve flexibility and agility</li>
+                        <li>• Develop endurance training</li>
+                        <li>• Learn injury prevention</li>
+                        <li>• Master recovery techniques</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Training Programs Section -->
+    <section id="programs" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Training Programs & Pricing</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Choose the perfect program to elevate your cricket skills</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- One-on-One Training -->
+                <div class="price-card bg-white rounded-lg shadow-lg p-8 relative">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-blue-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-user text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">One-on-One</h3>
+                        <p class="text-gray-600 mt-2">Personalized coaching</p>
+                    </div>
+                    <div class="text-center mb-6">
+                        <div class="text-4xl font-bold text-blue-600">$25</div>
+                        <div class="text-gray-600">per session</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            90-minute intensive session
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Customized training plan
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Video analysis included
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Progress tracking
+                        </li>
+                    </ul>
+                    <button onclick="openRegistrationModal('One-on-One')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition duration-300">
+                        Select Plan
+                    </button>
+                </div>
+
+                <!-- Group Training -->
+                <div class="price-card bg-white rounded-lg shadow-lg p-8 relative">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-users text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Group Training</h3>
+                        <p class="text-gray-600 mt-2">4-6 players per group</p>
+                    </div>
+                    <div class="text-center mb-6">
+                        <div class="text-4xl font-bold text-blue-700">$10</div>
+                        <div class="text-gray-600">per session</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            2-hour group session
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Team building exercises
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Match simulation
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Group challenges
+                        </li>
+                    </ul>
+                    <button onclick="openRegistrationModal('Group Training')" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-semibold transition duration-300">
+                        Select Plan
+                    </button>
+                </div>
+
+                <!-- Kids Program -->
+                <div class="price-card bg-white rounded-lg shadow-lg p-8 relative border-2 border-orange-500">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">POPULAR</span>
+                    </div>
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-orange-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-child text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Kids Program</h3>
+                        <p class="text-gray-600 mt-2">Ages 6-14 years</p>
+                    </div>
+                    <div class="text-center mb-6">
+                        <div class="text-4xl font-bold text-orange-600">$8</div>
+                        <div class="text-gray-600">per session</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Fun-based learning approach
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Basic skills development
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Safety-first training
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Parent progress reports
+                        </li>
+                    </ul>
+                    <button onclick="openRegistrationModal('Kids Program')" class="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition duration-300">
+                        Select Plan
+                    </button>
+                </div>
+
+                <!-- Online Coaching -->
+                <div class="price-card bg-white rounded-lg shadow-lg p-8 relative">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-purple-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                            <i class="fas fa-video text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">Online Coaching</h3>
+                        <p class="text-gray-600 mt-2">Virtual training sessions</p>
+                    </div>
+                    <div class="text-center mb-6">
+                        <div class="text-4xl font-bold text-purple-600">$15</div>
+                        <div class="text-gray-600">per session</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            60-minute video session
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Technique analysis
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Drill recommendations
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check text-green-500 mr-3"></i>
+                            Flexible scheduling
+                        </li>
+                    </ul>
+                    <button onclick="openRegistrationModal('Online Coaching')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-semibold transition duration-300">
+                        Select Plan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Training Gallery</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">See our training sessions and student achievements in action</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Gallery Items -->
+                <div class="gallery-item bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg overflow-hidden shadow-lg h-64 flex items-center justify-center">
+                    <div class="text-center text-blue-800">
+                        <i class="fas fa-camera text-4xl mb-4"></i>
+                        <p class="font-semibold">Batting Practice Session</p>
+                        <p class="text-sm">Individual technique training</p>
+                    </div>
+                </div>
+                <div class="gallery-item bg-gradient-to-br from-navy-100 to-navy-200 rounded-lg overflow-hidden shadow-lg h-64 flex items-center justify-center" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                    <div class="text-center text-blue-800">
+                        <i class="fas fa-video text-4xl mb-4"></i>
+                        <p class="font-semibold">Bowling Technique Video</p>
+                        <p class="text-sm">Action analysis and correction</p>
+                    </div>
+                </div>
+                <div class="gallery-item bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg overflow-hidden shadow-lg h-64 flex items-center justify-center">
+                    <div class="text-center text-slate-800">
+                        <i class="fas fa-camera text-4xl mb-4"></i>
+                        <p class="font-semibold">Fielding Drills</p>
+                        <p class="text-sm">Agility and catching practice</p>
+                    </div>
+                </div>
+                <div class="gallery-item bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg overflow-hidden shadow-lg h-64 flex items-center justify-center">
+                    <div class="text-center text-blue-800">
+                        <i class="fas fa-trophy text-4xl mb-4"></i>
+                        <p class="font-semibold">Student Achievements</p>
+                        <p class="text-sm">Tournament winners</p>
+                    </div>
+                </div>
+                <div class="gallery-item bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-lg overflow-hidden shadow-lg h-64 flex items-center justify-center">
+                    <div class="text-center text-indigo-800">
+                        <i class="fas fa-users text-4xl mb-4"></i>
+                        <p class="font-semibold">Group Training</p>
+                        <p class="text-sm">Team building exercises</p>
+                    </div>
+                </div>
+                <div class="gallery-item bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg overflow-hidden shadow-lg h-64 flex items-center justify-center">
+                    <div class="text-center text-blue-900">
+                        <i class="fas fa-child text-4xl mb-4"></i>
+                        <p class="font-semibold">Kids Training</p>
+                        <p class="text-sm">Fun learning activities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">What Our Students Say</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Real feedback from players and parents</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card rounded-lg p-6 shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Arjun Sharma</h4>
+                            <p class="text-sm text-gray-600">Student, Age 16</p>
+                        </div>
+                    </div>
+                    <div class="flex mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-600">"Coach Rajesh transformed my batting technique completely. I went from struggling to score runs to becoming the top scorer in my school team. His personalized approach really works!"</p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card rounded-lg p-6 shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Mrs. Priya Patel</h4>
+                            <p class="text-sm text-gray-600">Parent</p>
+                        </div>
+                    </div>
+                    <div class="flex mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-600">"My son has been training with Coach Rajesh for 2 years. Not only has his cricket improved dramatically, but his confidence and discipline have grown tremendously. Highly recommended!"</p>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card rounded-lg p-6 shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Vikram Singh</h4>
+                            <p class="text-sm text-gray-600">Student, Age 19</p>
+                        </div>
+                    </div>
+                    <div class="flex mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-600">"The bowling techniques I learned from Coach Rajesh helped me get selected for the district team. His focus on both physical and mental aspects of the game is exceptional."</p>
+                </div>
+
+                <!-- Testimonial 4 -->
+                <div class="testimonial-card rounded-lg p-6 shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Ananya Gupta</h4>
+                            <p class="text-sm text-gray-600">Student, Age 14</p>
+                        </div>
+                    </div>
+                    <div class="flex mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-600">"As one of the few girls in cricket training, Coach Rajesh made me feel comfortable and confident. His encouragement helped me become the captain of my school cricket team!"</p>
+                </div>
+
+                <!-- Testimonial 5 -->
+                <div class="testimonial-card rounded-lg p-6 shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Mr. Rajesh Kumar</h4>
+                            <p class="text-sm text-gray-600">Parent</p>
+                        </div>
+                    </div>
+                    <div class="flex mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-600">"The online coaching sessions during lockdown were a game-changer. Coach Rajesh's ability to provide effective training through video calls is remarkable. My daughter's skills improved even at home!"</p>
+                </div>
+
+                <!-- Testimonial 6 -->
+                <div class="testimonial-card rounded-lg p-6 shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Rohit Mehta</h4>
+                            <p class="text-sm text-gray-600">Student, Age 17</p>
+                        </div>
+                    </div>
+                    <div class="flex mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-600">"Coach Rajesh's fitness training program is incredible. I'm now faster, stronger, and have better endurance on the field. The holistic approach to cricket training is what sets him apart."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Get In Touch</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Ready to start your cricket journey? Contact us today!</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-gray-50 rounded-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <input type="tel" name="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                            <select name="subject" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="booking">Session Booking</option>
+                                <option value="programs">Training Programs</option>
+                                <option value="pricing">Pricing Information</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                            <textarea name="message" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition duration-300">
+                            <i class="fas fa-paper-plane mr-2"></i>Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Information -->
+                <div>
+                    <div class="space-y-8">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-phone text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Phone</h4>
+                                <p class="text-gray-600">+91 98765 43210</p>
+                                <p class="text-gray-600">+91 87654 32109</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-envelope text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Email</h4>
+                                <p class="text-gray-600">coach@elitecricketacademy.com</p>
+                                <p class="text-gray-600">info@elitecricketacademy.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-map-marker-alt text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Location</h4>
+                                <p class="text-gray-600">Elite Cricket Academy<br>Sports Complex, Sector 15<br>New Delhi, India - 110001</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-clock text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Training Hours</h4>
+                                <p class="text-gray-600">Monday - Friday: 6:00 AM - 8:00 PM</p>
+                                <p class="text-gray-600">Saturday - Sunday: 7:00 AM - 6:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Google Maps Placeholder -->
+                    <div class="mt-8 bg-gray-200 rounded-lg h-64 flex items-center justify-center">
+                        <div class="text-center text-gray-600">
+                            <i class="fas fa-map text-4xl mb-4"></i>
+                            <p class="font-semibold">Interactive Map</p>
+                            <p class="text-sm">Elite Cricket Academy Location</p>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div class="mt-8">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition duration-300">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center text-white hover:bg-blue-500 transition duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white hover:bg-red-700 transition duration-300">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="text-2xl font-bold mb-4">
+                        <i class="fas fa-cricket-ball mr-2"></i>Elite Cricket Academy
+                    </div>
+                    <p class="text-gray-400 mb-4">Professional cricket training for all skill levels. Transform your game with expert coaching and proven techniques.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">About Coach</a></li>
+                        <li><a href="#programs" class="text-gray-400 hover:text-white transition duration-300">Training Programs</a></li>
+                        <li><a href="#gallery" class="text-gray-400 hover:text-white transition duration-300">Gallery</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Training Programs</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">One-on-One Training</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Group Sessions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Kids Program</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Online Coaching</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400">
+                            <i class="fas fa-phone mr-2"></i>+91 98765 43210
+                        </li>
+                        <li class="text-gray-400">
+                            <i class="fas fa-envelope mr-2"></i>coach@elitecricketacademy.com
+                        </li>
+                        <li class="text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-2"></i>New Delhi, India
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 Elite Cricket Academy. All rights reserved. | Designed for professional cricket training excellence.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/919876543210" target="_blank" class="floating-whatsapp bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition duration-300">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Registration Modal -->
+    <div id="registration-modal" class="modal">
+        <div class="bg-white rounded-lg p-8 max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-900">Register for Cricket Training</h2>
+                <button onclick="closeRegistrationModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step active" id="step-1">1</div>
+                <div class="step" id="step-2">2</div>
+                <div class="step" id="step-3">3</div>
+                <div class="step" id="step-4">4</div>
+            </div>
+
+            <form id="registration-form" class="space-y-6">
+                <!-- Step 1: Personal Information -->
+                <div class="form-step active" id="form-step-1">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Personal Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" name="fullName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth *</label>
+                            <input type="date" name="dateOfBirth" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                            <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                            <input type="tel" name="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Complete Address *</label>
+                        <textarea name="address" rows="3" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Street address, City, State, PIN Code"></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 2: Physical Information -->
+                <div class="form-step" id="form-step-2">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Physical Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Height (in cm) *</label>
+                            <input type="number" name="height" required min="100" max="250" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 175">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Weight (in kg) *</label>
+                            <input type="number" name="weight" required min="20" max="200" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 65">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender *</label>
+                            <select name="gender" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Emergency Contact *</label>
+                            <input type="tel" name="emergencyContact" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Emergency contact number">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Medical Conditions (if any)</label>
+                        <textarea name="medicalConditions" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Please mention any medical conditions, allergies, or injuries we should be aware of"></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 3: Cricket Information -->
+                <div class="form-step" id="form-step-3">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Cricket Experience & Preferences</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Skill Level *</label>
+                            <select name="skillLevel" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select Skill Level</option>
+                                <option value="beginner">Beginner (Never played cricket)</option>
+                                <option value="intermediate">Intermediate (Some experience)</option>
+                                <option value="advanced">Advanced (Regular player)</option>
+                                <option value="professional">Professional (Competitive level)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Training Program *</label>
+                            <select name="trainingProgram" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select Program</option>
+                                <option value="one-on-one">One-on-One Training ($25/session)</option>
+                                <option value="group">Group Training ($10/session)</option>
+                                <option value="kids">Kids Program ($8/session)</option>
+                                <option value="online">Online Coaching ($15/session)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Areas of Interest * (Select all that apply)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                                <input type="checkbox" name="interests" value="batting" class="mr-2">
+                                <div>
+                                    <i class="fas fa-baseball-bat text-blue-600 mr-2"></i>
+                                    <span class="font-medium">Batting</span>
+                                </div>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                                <input type="checkbox" name="interests" value="bowling" class="mr-2">
+                                <div>
+                                    <i class="fas fa-cricket-ball text-red-600 mr-2"></i>
+                                    <span class="font-medium">Bowling</span>
+                                </div>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                                <input type="checkbox" name="interests" value="fielding" class="mr-2">
+                                <div>
+                                    <i class="fas fa-running text-green-600 mr-2"></i>
+                                    <span class="font-medium">Fielding</span>
+                                </div>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                                <input type="checkbox" name="interests" value="fitness" class="mr-2">
+                                <div>
+                                    <i class="fas fa-dumbbell text-purple-600 mr-2"></i>
+                                    <span class="font-medium">Fitness & Drills</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Previous Cricket Experience</label>
+                        <textarea name="experience" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Tell us about your cricket background, teams played for, achievements, etc."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Goals & Expectations</label>
+                        <textarea name="goals" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="What do you hope to achieve through this training?"></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 4: Consent & Confirmation -->
+                <div class="form-step" id="form-step-4">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Consent & Communication Preferences</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-4">Communication Consent *</h4>
+                            <p class="text-sm text-gray-600 mb-4">Please select how you'd like us to contact you for session confirmations, updates, and training information:</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="contactPreferences" value="phone" id="contact-phone" class="mr-3">
+                                    <label for="contact-phone" class="text-sm">
+                                        <i class="fas fa-phone text-blue-600 mr-2"></i>
+                                        Phone calls for session confirmations and important updates
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="contactPreferences" value="sms" id="contact-sms" class="mr-3">
+                                    <label for="contact-sms" class="text-sm">
+                                        <i class="fas fa-sms text-green-600 mr-2"></i>
+                                        SMS/Text messages for quick updates and reminders
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="contactPreferences" value="email" id="contact-email" class="mr-3">
+                                    <label for="contact-email" class="text-sm">
+                                        <i class="fas fa-envelope text-purple-600 mr-2"></i>
+                                        Email for detailed information, schedules, and progress reports
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="contactPreferences" value="whatsapp" id="contact-whatsapp" class="mr-3">
+                                    <label for="contact-whatsapp" class="text-sm">
+                                        <i class="fab fa-whatsapp text-green-500 mr-2"></i>
+                                        WhatsApp messages for quick communication
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-4">Terms & Conditions *</h4>
+                            <div class="space-y-3 text-sm text-gray-600">
+                                <div class="flex items-start">
+                                    <input type="checkbox" name="terms" value="liability" id="terms-liability" required class="mr-3 mt-1">
+                                    <label for="terms-liability">
+                                        I understand that cricket training involves physical activity and accept responsibility for any risks involved. I confirm that I am physically fit to participate.
+                                    </label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" name="terms" value="medical" id="terms-medical" required class="mr-3 mt-1">
+                                    <label for="terms-medical">
+                                        I have disclosed all relevant medical conditions and will inform the coach of any changes to my health status.
+                                    </label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" name="terms" value="payment" id="terms-payment" required class="mr-3 mt-1">
+                                    <label for="terms-payment">
+                                        I understand the payment terms and cancellation policy. Sessions must be paid in advance and 24-hour notice is required for cancellations.
+                                    </label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" name="terms" value="privacy" id="terms-privacy" required class="mr-3 mt-1">
+                                    <label for="terms-privacy">
+                                        I consent to the collection and use of my personal information for training purposes and agree to the privacy policy.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-3">What Happens Next?</h4>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <p><i class="fas fa-check text-green-600 mr-2"></i>You'll receive a confirmation email with your registration details</p>
+                                <p><i class="fas fa-check text-green-600 mr-2"></i>Coach Rajesh will contact you within 24 hours to schedule your first session</p>
+                                <p><i class="fas fa-check text-green-600 mr-2"></i>We'll send you preparation guidelines and what to bring</p>
+                                <p><i class="fas fa-check text-green-600 mr-2"></i>Your personalized training plan will be created based on your goals</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between pt-6 border-t">
+                    <button type="button" id="prev-btn" onclick="previousStep()" class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-400 transition duration-300" style="display: none;">
+                        <i class="fas fa-arrow-left mr-2"></i>Previous
+                    </button>
+                    <div class="flex space-x-4">
+                        <button type="button" id="next-btn" onclick="nextStep()" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                            Next<i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <button type="submit" id="submit-btn" class="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition duration-300" style="display: none;">
+                            <span class="loading-spinner mr-2"></span>
+                            <i class="fas fa-user-plus mr-2"></i>Complete Registration
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div class="success-message" id="success-message">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-check text-green-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Registration Successful!</h3>
+                    <p class="text-gray-600 mb-6">Thank you for registering with Elite Cricket Academy. We've sent confirmation emails to both you and Coach Rajesh.</p>
+                    <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm text-blue-800">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Coach Rajesh will contact you within 24 hours to schedule your first session and discuss your training plan.
+                        </p>
+                    </div>
+                    <button onclick="closeRegistrationModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://omwcrmjfddidpdremqkc.supabase.co'; //  your Supabase URL
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9td2NybWpmZGRpZHBkcmVtcWtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjE4NjQsImV4cCI6MjA3MDE5Nzg2NH0.AGFYUxNm2gbwQkviCRDLMAymbkL5cjYHOiHLIv5wlwQ'; // your Supabase anon key
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // EmailJS Configuration
+        emailjs.init('k0CcU0JSy822lXYqP'); // Replace with your EmailJS user ID
+
+        // Global variables
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        // Navigation functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                // Close mobile menu if open
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        // Modal functions
+        function openRegistrationModal(program = '') {
+            document.getElementById('registration-modal').classList.add('active');
+            if (program) {
+                document.querySelector('select[name="trainingProgram"]').value = program.toLowerCase().replace(' ', '-');
+            }
+            resetForm();
+        }
+
+        function closeRegistrationModal() {
+            document.getElementById('registration-modal').classList.remove('active');
+            resetForm();
+        }
+
+        function resetForm() {
+            currentStep = 1;
+            updateStepDisplay();
+            document.getElementById('registration-form').reset();
+            document.getElementById('success-message').style.display = 'none';
+            document.getElementById('registration-form').style.display = 'block';
+            
+            // Reset checkbox selections
+            document.querySelectorAll('.checkbox-item').forEach(item => {
+                item.classList.remove('selected');
+                item.querySelector('input[type="checkbox"]').checked = false;
+            });
+        }
+
+        // Step navigation functions
+        function nextStep() {
+            if (validateCurrentStep()) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateStepDisplay();
+                }
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay();
+            }
+        }
+
+        function updateStepDisplay() {
+            // Update step indicators
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElement = document.getElementById(`step-${i}`);
+                const formStep = document.getElementById(`form-step-${i}`);
+                
+                if (i < currentStep) {
+                    stepElement.classList.add('completed');
+                    stepElement.classList.remove('active');
+                } else if (i === currentStep) {
+                    stepElement.classList.add('active');
+                    stepElement.classList.remove('completed');
+                } else {
+                    stepElement.classList.remove('active', 'completed');
+                }
+
+                // Show/hide form steps
+                if (i === currentStep) {
+                    formStep.classList.add('active');
+                } else {
+                    formStep.classList.remove('active');
+                }
+            }
+
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+
+            prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+            
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        function validateCurrentStep() {
+            const currentFormStep = document.getElementById(`form-step-${currentStep}`);
+            const requiredFields = currentFormStep.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+
+            // Special validation for step 3 (interests)
+            if (currentStep === 3) {
+                const interests = currentFormStep.querySelectorAll('input[name="interests"]:checked');
+                if (interests.length === 0) {
+                    alert('Please select at least one area of interest.');
+                    isValid = false;
+                }
+            }
+
+            // Special validation for step 4 (consent)
+            if (currentStep === 4) {
+                const contactPrefs = currentFormStep.querySelectorAll('input[name="contactPreferences"]:checked');
+                const terms = currentFormStep.querySelectorAll('input[name="terms"]:checked');
+                
+                if (contactPrefs.length === 0) {
+                    alert('Please select at least one communication preference.');
+                    isValid = false;
+                }
+                
+                if (terms.length < 4) {
+                    alert('Please accept all terms and conditions to proceed.');
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                alert('Please fill in all required fields before proceeding.');
+            }
+
+            return isValid;
+        }
+
+        // Checkbox toggle function
+        function toggleCheckbox(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('selected');
+            } else {
+                element.classList.remove('selected');
+            }
+        }
+
+        // Form submission
+        document.getElementById('registration-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateCurrentStep()) {
+                return;
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            const spinner = submitBtn.querySelector('.loading-spinner');
+            
+            // Show loading state
+            spinner.style.display = 'inline-block';
+            submitBtn.disabled = true;
+
+            try {
+                // Collect form data
+                const formData = new FormData(this);
+                const registrationData = {
+                    full_name: formData.get('fullName'),
+                    date_of_birth: formData.get('dateOfBirth'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address'),
+                    height: parseInt(formData.get('height')),
+                    weight: parseInt(formData.get('weight')),
+                    gender: formData.get('gender'),
+                    emergency_contact: formData.get('emergencyContact'),
+                    medical_conditions: formData.get('medicalConditions') || '',
+                    skill_level: formData.get('skillLevel'),
+                    training_program: formData.get('trainingProgram'),
+                    interests: Array.from(formData.getAll('interests')),
+                    experience: formData.get('experience') || '',
+                    goals: formData.get('goals') || '',
+                    contact_preferences: Array.from(formData.getAll('contactPreferences')),
+                    registration_date: new Date().toISOString(),
+                    status: 'pending'
+                };
+
+                // Save to Supabase
+                const { data, error } = await supabase
+                    .from('cricket_registrations')
+                    .insert([registrationData])
+                    .select();
+
+                if (error) {
+                    throw error;
+                }
+
+                // Send emails
+                await sendEmails(registrationData);
+
+                // Show success message
+                document.getElementById('registration-form').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('There was an error processing your registration. Please try again or contact us directly.');
+            } finally {
+                // Hide loading state
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Email sending function
+        async function sendEmails(data) {
+            const interests = data.interests.join(', ');
+            const contactPrefs = data.contact_preferences.join(', ');
+
+            // Email to student
+            const studentEmailParams = {
+                to_email: data.email,
+                to_name: data.full_name,
+                subject: 'Registration Confirmation - Elite Cricket Academy',
+                message: `
+Dear ${data.full_name},
+
+Thank you for registering with Elite Cricket Academy! We're excited to help you on your cricket journey.
+
+Registration Details:
+- Program: ${data.training_program}
+- Skill Level: ${data.skill_level}
+- Areas of Interest: ${interests}
+- Registration Date: ${new Date(data.registration_date).toLocaleDateString()}
+
+What's Next:
+1. Coach Rajesh will contact you within 24 hours via your preferred communication method
+2. We'll schedule your first session based on your availability
+3. You'll receive preparation guidelines and equipment recommendations
+4. Your personalized training plan will be created
+
+Contact Information:
+Phone: +91 98765 43210
+Email: coach@elitecricketacademy.com
+
+We look forward to training with you!
+
+Best regards,
+Elite Cricket Academy Team
+                `
+            };
+
+            // Email to coach
+            const coachEmailParams = {
+                to_email: 'coach@elitecricketacademy.com',
+                to_name: 'Coach Rajesh Kumar',
+                subject: 'New Student Registration - Elite Cricket Academy',
+                message: `
+New Student Registration Alert
+
+Student Details:
+- Name: ${data.full_name}
+- Email: ${data.email}
+- Phone: ${data.phone}
+- Age: ${calculateAge(data.date_of_birth)} years
+- Program: ${data.training_program}
+- Skill Level: ${data.skill_level}
+- Interests: ${interests}
+- Height: ${data.height}cm, Weight: ${data.weight}kg
+- Emergency Contact: ${data.emergency_contact}
+- Medical Conditions: ${data.medical_conditions || 'None reported'}
+- Experience: ${data.experience || 'Not specified'}
+- Goals: ${data.goals || 'Not specified'}
+- Preferred Contact: ${contactPrefs}
+- Address: ${data.address}
+
+Please contact the student within 24 hours to schedule their first session.
+
+Registration Date: ${new Date(data.registration_date).toLocaleString()}
+                `
+            };
+
+            // Send emails using EmailJS
+            try {
+                await emailjs.send('service_6s2i59i', 'template_y4zvfwh', studentEmailParams);
+                await emailjs.send('service_6s2i59i', 'template_y4zvfwh', coachEmailParams);
+            } catch (error) {
+                console.error('Email sending error:', error);
+                // Don't throw error here as registration was successful
+            }
+        }
+
+        // Helper function to calculate age
+        function calculateAge(dateOfBirth) {
+            const today = new Date();
+            const birthDate = new Date(dateOfBirth);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // Contact form submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate form submission
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Show success message
+            alert('Thank you for your message! We will get back to you within 24 hours.');
+            this.reset();
+        });
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStepDisplay();
+        });
+
+        // Scroll to top functionality
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('shadow-lg');
+            } else {
+                nav.classList.remove('shadow-lg');
+            }
+        });
+    </script>
+
+    <!-- Supabase Database Schema (Create this table in your Supabase dashboard) -->
+    <!--
+    CREATE TABLE cricket_registrations (
+        id SERIAL PRIMARY KEY,
+        full_name VARCHAR(255) NOT NULL,
+        date_of_birth DATE NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(20) NOT NULL,
+        address TEXT NOT NULL,
+        height INTEGER NOT NULL,
+        weight INTEGER NOT NULL,
+        gender VARCHAR(10) NOT NULL,
+        emergency_contact VARCHAR(20) NOT NULL,
+        medical_conditions TEXT,
+        skill_level VARCHAR(50) NOT NULL,
+        training_program VARCHAR(50) NOT NULL,
+        interests TEXT[] NOT NULL,
+        experience TEXT,
+        goals TEXT,
+        contact_preferences TEXT[] NOT NULL,
+        registration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        status VARCHAR(20) DEFAULT 'pending',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    );
+    -->
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96bbefc09332e7be',t:'MTc1NDYyMzg0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
